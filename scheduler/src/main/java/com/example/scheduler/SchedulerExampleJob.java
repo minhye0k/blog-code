@@ -1,6 +1,7 @@
 package com.example.scheduler;
 
 import lombok.extern.slf4j.Slf4j;
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -14,18 +15,20 @@ import static com.example.scheduler.DateTimeFormatterConstant.DATE_TIME_FORMATTE
 public class SchedulerExampleJob {
     private static final String CRON_EXPRESSION_EXAMPLE = "30 * * * * *";
 
-//    @Scheduled(cron = CRON_EXPRESSION_EXAMPLE)
+    @SchedulerLock(name = "cron_lock")
+    @Scheduled(cron = CRON_EXPRESSION_EXAMPLE)
     public void cron() {
-        log.info(">>>>>시작 시간 {}", LocalDateTime.now().format(DATE_TIME_FORMATTER));
+//        log.info(">>>>>시작 시간 {}", LocalDateTime.now().format(DATE_TIME_FORMATTER));
+        log.info(">>>>>get shed lock {}", LocalDateTime.now().format(DATE_TIME_FORMATTER));
     }
 
-    @Scheduled(fixedRate = 3000)
+//    @Scheduled(fixedRate = 3000)
     public void fixedRate1() throws InterruptedException {
         log.info(">>>>>fixedRate1 시작 시간 {}", LocalDateTime.now().format(DATE_TIME_FORMATTER));
         Thread.sleep(5000);
     }
 
-    @Scheduled(fixedRate = 3000)
+//    @Scheduled(fixedRate = 3000)
     public void fixedRate2() throws InterruptedException {
         log.info(">>>>>fixedRate2 시작 시간 {}", LocalDateTime.now().format(DATE_TIME_FORMATTER));
         Thread.sleep(5000);

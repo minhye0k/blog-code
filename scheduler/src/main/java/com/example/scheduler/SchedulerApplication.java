@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import static com.example.scheduler.DateTimeFormatterConstant.DATE_TIME_FORMATTER;
 
 @Slf4j
-@EnableScheduling
 @SpringBootApplication
 public class SchedulerApplication {
 

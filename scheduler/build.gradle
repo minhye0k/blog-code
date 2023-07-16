@@ -19,10 +19,20 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'com.h2database:h2'
+	// https://mvnrepository.com/artifact/net.javacrumbs.shedlock/shedlock-spring
+	implementation 'net.javacrumbs.shedlock:shedlock-spring:4.44.0'
+	// https://mvnrepository.com/artifact/net.javacrumbs.shedlock/shedlock-provider-redis-spring
+	implementation 'net.javacrumbs.shedlock:shedlock-provider-redis-spring:4.44.0'
+	// https://mvnrepository.com/artifact/net.javacrumbs.shedlock/shedlock-provider-jdbc-template
+	implementation 'net.javacrumbs.shedlock:shedlock-provider-jdbc-template:4.44.0'
+
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
