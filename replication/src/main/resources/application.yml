@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    hikari:
+      primary:
+        jdbc-url: jdbc:mariadb://localhost:3307
+        username: root
+        driver-class-name: org.mariadb.jdbc.Driver
+      secondary:
+        jdbc-url: jdbc:mariadb://localhost:3308
+        username: root
+        driver-class-name: org.mariadb.jdbc.Driver

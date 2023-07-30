@@ -2,4 +2,5 @@ spring:
   datasource:
     url: jdbc:mariadb://localhost:3306/toy
     driver-class-name: org.mariadb.jdbc.Driver
-    #username:
+    username: root
+    password: Asdf1234!

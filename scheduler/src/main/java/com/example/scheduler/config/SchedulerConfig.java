@@ -1,11 +1,13 @@
 package com.example.scheduler.config;
 
+import lombok.RequiredArgsConstructor;
 import net.javacrumbs.shedlock.core.LockProvider;
 import net.javacrumbs.shedlock.provider.jdbctemplate.JdbcTemplateLockProvider;
 import net.javacrumbs.shedlock.provider.redis.spring.RedisLockProvider;
 import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
@@ -17,8 +19,11 @@ import javax.sql.DataSource;
 @EnableSchedulerLock(defaultLockAtLeastFor = "40s", defaultLockAtMostFor = "50s")
 @EnableScheduling
 @Configuration
+@RequiredArgsConstructor
 public class SchedulerConfig implements SchedulingConfigurer {
     private static final int POOL_SIZE = 5;
+
+    private final Environment env;
 
     @Override
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
@@ -31,11 +36,13 @@ public class SchedulerConfig implements SchedulingConfigurer {
     }
 
 //    @Bean
-//    public LockProvider lockProvider(DataSource dataSource) {
-//        return new JdbcTemplateLockProvider(dataSource);
-//    }
+    public LockProvider lockProvider(DataSource dataSource) {
+        return new JdbcTemplateLockProvider(dataSource);
+    }
+
     @Bean
     public LockProvider lockProvider(RedisConnectionFactory redisConnectionFactory) {
-        return new RedisLockProvider(redisConnectionFactory);
+        String lockEnv = env.getProperty("spring.profiles.active");
+        return new RedisLockProvider(redisConnectionFactory, lockEnv);
     }
 }

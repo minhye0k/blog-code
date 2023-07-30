@@ -15,10 +15,10 @@ import static com.example.scheduler.DateTimeFormatterConstant.DATE_TIME_FORMATTE
 public class SchedulerExampleJob {
     private static final String CRON_EXPRESSION_EXAMPLE = "30 * * * * *";
 
-    @SchedulerLock(name = "cron_lock")
+    @SchedulerLock(name = "cron_lock", lockAtLeastFor = "20s", lockAtMostFor = "50s")
     @Scheduled(cron = CRON_EXPRESSION_EXAMPLE)
     public void cron() {
-//        log.info(">>>>>시작 시간 {}", LocalDateTime.now().format(DATE_TIME_FORMATTER));
+        log.info(">>>>>시작 시간 {}", LocalDateTime.now().format(DATE_TIME_FORMATTER));
         log.info(">>>>>get shed lock {}", LocalDateTime.now().format(DATE_TIME_FORMATTER));
     }
 
