@@ -14,15 +14,17 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class VideoProcessor {
+    private static final String exception = "EXCEPTION";
     private final ThreadPoolTaskExecutor executor;
     private final FFmpegExecutor fFmpegExecutor;
 
-    public void extractThumbnailsInParallel(List<String> videos) throws IOException {
+    public List<String> extractThumbnailsInParallel(List<String> videos) throws IOException{
         List<CompletableFuture<String>> completableFutures = new ArrayList<>();
 
         for (String video : videos) {
@@ -30,13 +32,18 @@ public class VideoProcessor {
                     .exceptionally(
                             e -> {
                                 log.error("error occurring in extracted thumbnail of {} ", video, e);
-                                return null;
+                                return exception;
                             }
                     );
             completableFutures.add(completableFuture);
         }
-//        final CompletableFuture<Void> completableFuture = CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture[0]));
-        log.info("extracted thumbnails of {} videos ", videos.size());
+        final CompletableFuture<List<String>> completableFuture = CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture[0]))
+                .thenApply(v -> completableFutures.stream()
+                        .map(CompletableFuture::join)
+                        .collect(Collectors.toList())
+                );
+
+        return completableFuture.join();
     }
 
     public Supplier<String> extractThumbnail(String videoPath) throws IOException {
